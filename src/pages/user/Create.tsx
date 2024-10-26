@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { userData } from "../../models/user"
 import { addUser, deleteUser, editUser, getUserBySearching } from "../../services/user"
+import { UserList } from "../../components/user/List";
 
 export const UserCreate: React.FC = () => {
     const [id, setId] = useState<string>('');
@@ -13,7 +14,7 @@ export const UserCreate: React.FC = () => {
     const [users, setUsers] = useState<userData[]>([]); 
 
     const handleAddUser = async() => {
-            const newUser : userData = {id: '', name, email, password};
+            let newUser : userData = {id: '', name, email, password};
 
             const userId = await addUser(newUser);
            if (userId == null) {
@@ -21,7 +22,6 @@ export const UserCreate: React.FC = () => {
            } else {
             alert ('User was added successfully');
             newUser.id = userId;
-            setUsers((prevUsers) => [...prevUsers,newUser]);
             handleClear();
            }
     };
@@ -51,12 +51,17 @@ export const UserCreate: React.FC = () => {
             alert('User deleted successfully');
     }
 
+    const handleEditClick = (user : userData) => {
+        setId(user.id);
+        setName(user.name);
+        setEmail(user.email);
+        setBtn('Update');
+    };
+
     const fetchUsers = async () => {
         const fetchedUsers = await getUserBySearching(searchname);
         setUsers(fetchedUsers);
     };
-
-
 
     useEffect(() => {    
         fetchUsers();
@@ -102,38 +107,7 @@ export const UserCreate: React.FC = () => {
                     setSearchName(e.target.value);
                 }}
             />
-            <table border={1}>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {users.map((user) => (
-                        <tr key={user.id}>
-                            <td>{user.id}</td>
-                            <td>{user.name}</td>
-                            <td>{user.email}</td>
-                            <td>
-                                <button
-                                    onClick={() => handleRemoveUser(user.id)}
-                                >Remove</button>
-                                 <button
-                                    onClick={() => {
-                                        setId(user.id);
-                                        setName(user.name);
-                                        setEmail(user.email);
-                                        setBtn('Update');
-                                    }}
-                                >Edit</button>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+            <UserList users={users} remove={handleRemoveUser} edit={handleEditClick}/>
 
         </>
     );
