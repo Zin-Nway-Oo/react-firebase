@@ -104,10 +104,12 @@ export const UserCreate: React.FC = () => {
             />
             <table border={1}>
                 <thead>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th></th>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th></th>
+                    </tr>
                 </thead>
                 <tbody>
                     {users.map((user) => (
