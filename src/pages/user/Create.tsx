@@ -4,11 +4,11 @@ import { addUser, deleteUser, editUser, getUserBySearching } from "../../service
 
 export const UserCreate: React.FC = () => {
     const [id, setId] = useState<string>('');
-    const [name, setName] = useState<string>(''); // Specify string type for `name`
-    const [email, setEmail] = useState<string | ''>(''); // `email` as number or empty string for initial state
-    const [password, setPassword] = useState<string | ''>(''); // `password` as number or empty string for initial state
+    const [name, setName] = useState<string>(''); 
+    const [email, setEmail] = useState<string | ''>('');
+    const [password, setPassword] = useState<string | ''>('');
     const [btn, setBtn] = useState<string | ''>('Add');
-    const [searchname, setSearchName] = useState<string>(''); // Specify string type for `name`
+    const [searchname, setSearchName] = useState<string>('');
 
     const [users, setUsers] = useState<userData[]>([]); 
 
@@ -47,7 +47,7 @@ export const UserCreate: React.FC = () => {
 
     const handleRemoveUser = async(id : string) => {
         await deleteUser(id);
-        setUsers((prevUsers) => prevUsers.filter(user => user.id !== id)); // Update state to remove the deleted user
+        setUsers((prevUsers) => prevUsers.filter(user => user.id !== id));
             alert('User deleted successfully');
     }
 

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { userData } from "../models/user"
 import { db } from "./firebaseConfig"
 import { collection, addDoc, getDocs, doc, deleteDoc, getDoc, setDoc, query, where } from "firebase/firestore"
@@ -73,6 +74,36 @@ export const deleteUser = async (userId: string) => {
         console.error("Error deleting user: ", e);
     }
 };
+
+// to make login access for auth
+export const validLogin = async(email: string, password: string) => {
+    let userId = '';
+    try {
+        const userRef = collection(db, 'users'); // Get the collection reference
+        
+        // Create a query for names that start with the substring
+        const userQuery = query(
+            userRef,
+            where("email", "==", email), 
+            where("password", "==", password) 
+        );
+        // Execute the query and get the documents
+        const userSnapshots = await getDocs(userQuery);
+
+        // Check if a user document is found
+        if (!userSnapshots.empty) {
+            const userDoc = userSnapshots.docs[0]; // Get the first document
+            userId = userDoc.id; // Extract the document ID as the user ID
+        } else {
+            console.error("Invalid login - no matching user found.");
+        }
+        
+        return { userId };
+    } catch (e) {
+        console.error("invlid login");        
+        return {userId};
+    }
+}
 
 
 export const editUser = async (userId: string, updatedUser: Partial<userData>): Promise<boolean> => {
