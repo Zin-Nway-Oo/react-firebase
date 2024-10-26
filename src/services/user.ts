@@ -1,11 +1,9 @@
-import { useState } from "react";
 import { userData } from "../models/user"
 import { db } from "./firebaseConfig"
 import { collection, addDoc, getDocs, doc, deleteDoc, getDoc, setDoc, query, where } from "firebase/firestore"
 
 export const addUser = async (user: userData) => {
-    try {
-        // Add a new document in the "users" collection
+    try {        
         const docRef = await addDoc(collection(db, 'users'), {
           name: user.name,
           email: user.email,
@@ -19,14 +17,14 @@ export const addUser = async (user: userData) => {
     }
 }
 
-export const getUser = async (): Promise<userData[]> => { // Ensure the return type is userData[]
+export const getUser = async (): Promise<userData[]> => { 
     try {
-        const userRef = collection(db, 'users'); // Correctly get the collection reference
-        const userSnapshots = await getDocs(userRef); // Fetch the documents
+        const userRef = collection(db, 'users'); 
+        const userSnapshots = await getDocs(userRef); 
         const userLists = userSnapshots.docs.map(doc => ({
-            id: doc.id, // Add document ID
-            ...doc.data() as Omit<userData, 'id'> // Map the data to userData
-        })) as userData[]; // Cast the resulting array to userData[]
+            id: doc.id, 
+            ...doc.data() as Omit<userData, 'id'>
+        })) as userData[];
         return userLists;
     } catch (e) {
         console.error('Error fetching users: ', e);
@@ -34,23 +32,22 @@ export const getUser = async (): Promise<userData[]> => { // Ensure the return t
     }
 }
 
-export const getUserBySearching = async (searchUser : string): Promise<userData[]> => { // Ensure the return type is userData[]
+export const getUserBySearching = async (searchUser : string): Promise<userData[]> => { 
     try {
-        const userRef = collection(db, 'users'); // Get the collection reference
+        const userRef = collection(db, 'users'); 
         
-        // Create a query for names that start with the substring
         const userQuery = query(
             userRef,
-            where("name", ">=", searchUser), // Start with the substring
-            where("name", "<", searchUser + "\uf8ff") // End just after the substring
+            where("name", ">=", searchUser), 
+            where("name", "<", searchUser + "\uf8ff") 
         );
 
-        const userSnapshots = await getDocs(userQuery); // Fetch the filtered documents
+        const userSnapshots = await getDocs(userQuery);
 
         const userLists = userSnapshots.docs.map(doc => ({
-            id: doc.id, // Add document ID
-            ...doc.data() as Omit<userData, 'id'> // Map the data to userData
-        })) as userData[]; // Cast the resulting array to userData[]
+            id: doc.id, 
+            ...doc.data() as Omit<userData, 'id'> 
+        })) as userData[]; 
         
         return userLists;
     } catch (e) {
@@ -79,21 +76,20 @@ export const deleteUser = async (userId: string) => {
 export const validLogin = async(email: string, password: string) => {
     let userId = '';
     try {
-        const userRef = collection(db, 'users'); // Get the collection reference
+        const userRef = collection(db, 'users');        
         
-        // Create a query for names that start with the substring
         const userQuery = query(
             userRef,
             where("email", "==", email), 
             where("password", "==", password) 
         );
-        // Execute the query and get the documents
+       
         const userSnapshots = await getDocs(userQuery);
 
-        // Check if a user document is found
+        
         if (!userSnapshots.empty) {
-            const userDoc = userSnapshots.docs[0]; // Get the first document
-            userId = userDoc.id; // Extract the document ID as the user ID
+            const userDoc = userSnapshots.docs[0]; 
+            userId = userDoc.id; 
         } else {
             console.error("Invalid login - no matching user found.");
         }
@@ -108,14 +104,12 @@ export const validLogin = async(email: string, password: string) => {
 
 export const editUser = async (userId: string, updatedUser: Partial<userData>): Promise<boolean> => {
     try {
-        const userRef = doc(db, "users", userId);
-        
-        // Use setDoc to update the user document
+        const userRef = doc(db, "users", userId);  
         await setDoc(userRef, updatedUser, { merge: true });
         console.log(`User with ID ${userId} updated successfully`);
-        return true; // Return true if update is successful
+        return true;
     } catch (e) {
         console.error("Error updating user: ", e);
-        return false; // Return false if an error occurs
+        return false; 
     }
 };

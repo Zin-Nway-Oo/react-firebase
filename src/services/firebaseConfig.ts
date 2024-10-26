@@ -1,7 +1,6 @@
-// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore"; // Import Firestore
-import { getAnalytics } from "firebase/analytics"; // Import Analytics (if needed)
+import { getFirestore } from "firebase/firestore";
+import { getAnalytics } from "firebase/analytics";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -11,16 +10,15 @@ const firebaseConfig = {
   storageBucket: import.meta.env.VITE_STORAGE_BUCKET,
   messagingSenderId: import.meta.env.VITE_MESSENGING_SENDER_ID,
   appId: import.meta.env.VITE_APP_ID,
-  measurementId: import.meta.env.VITE_MEASUREMENT_ID, // Optional for Analytics
+  measurementId: import.meta.env.VITE_MEASUREMENT_ID,
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-// Initialize Firestore
-const db = getFirestore(app); // Correctly initialize Firestore
 
-// Optionally initialize Analytics
-const analytics = getAnalytics(app); // Keep this if you plan to use Analytics
+const db = getFirestore(app);
 
-export { db, analytics }; // Export both db and analytics if needed
+const analytics = getAnalytics(app); 
+
+export { db, analytics };

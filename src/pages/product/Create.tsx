@@ -6,9 +6,8 @@ export const ProductCreate: React.FC = () => {
     const userContext = useContext(UserContext);
     const navigate = useNavigate();
 
-    // Check if userContext is defined
     if (!userContext) {
-        return <p>Loading...</p>; // Or handle it as needed
+        return <p>Loading...</p>; 
     }
 
     const { userId, setUserId } = userContext;
